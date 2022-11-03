@@ -45,6 +45,7 @@ use narwhal_config::{
     WorkerId as ConsensusWorkerId,
 };
 
+use narwhal_consensus::ConsensusOutput;
 use sui_adapter::adapter;
 use sui_config::genesis::Genesis;
 use sui_json_rpc_types::{SuiEventEnvelope, SuiTransactionEffects};
@@ -2393,5 +2394,13 @@ impl AuthorityState {
                 Ok(())
             }
         }
+    }
+
+    pub(crate) fn handle_commit_boundary(
+        &self,
+        consensus_output: &Arc<ConsensusOutput>,
+    ) -> SuiResult {
+        self.database
+            .record_checkpoint_boundary(consensus_output.consensus_index)
     }
 }
